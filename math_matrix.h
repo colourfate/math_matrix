@@ -15,10 +15,26 @@ struct matrix_t{
 	u8 row;
 	u8 column;
 };
+
+// FIXME: 如果b在栈中被自动释放后，a也不能被访问
 #define MATRIX_INIT(a,b,c,d) 		\
-			a.m=b;					\
+			a.m=(float *)b;					\
 			a.row=c;				\
 			a.column=d
+			
+/*
+ * 这里存在一些问题
+#define MATRIX_INIT(_m, _src, _row, _column)		\
+	do {											\
+			struct matrix_t _temp;							\
+			_temp.row = _row;						\
+			_temp.column = _column;					\
+			_temp.m = (float *)_src;				\
+			matrix_t_malloc(&_m, _row, _column);		\
+			matrix_t_copy(&_m, &_temp);				\
+			matrix_t_free(&_temp);					\
+	} while(0)			
+*/
 int8_t matrix_t_T(struct matrix_t *, const struct matrix_t *);
 void matrix_t_show(char *name, const struct matrix_t *M);
 int8_t matrix_t_plus(struct matrix_t *, const struct matrix_t *, 
